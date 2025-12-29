@@ -81,16 +81,3 @@ ALTER TABLE UserRole ADD CONSTRAINT UserRole_Role FOREIGN KEY (IdRole)
 
 ALTER TABLE UserRole ADD CONSTRAINT UserRole_User FOREIGN KEY (IdUser)
     REFERENCES `User` (IdUser);
-
-INSERT INTO Role (Role) VALUES ('ROLE_USER'), ('ROLE_ADMIN');
-INSERT INTO Location (City, Address) VALUES ('New York', '5th Avenue'), ('Lviv', 'Rynok Square');
-INSERT INTO CarStatus (Status) VALUES ('AVAILABLE'), ('RENTED');
-INSERT INTO RentalStatus (Status) VALUES ('ACTIVE'), ('COMPLETED'), ('CANCELLED');
-
-INSERT INTO `User` (Name, Surname, Email, HashPassword, PhoneNumber)
-VALUES ('John', 'Doe', 'john@example.com', 'hashed_secret', '123456789');
-
-INSERT INTO Car (Brand, Model, Price, Year, IdStatus, Location_IdLocation)
-VALUES ('Toyota', 'Camry', 50.00, 2022, 1, 1);
-
-INSERT INTO UserRole (IdUser, IdRole) VALUES (1, 1);
