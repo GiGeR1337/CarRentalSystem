@@ -10,6 +10,5 @@ import java.util.List;
 public interface CarRepository extends JpaRepository<Car, Integer> {
     List<Car> findAll();
     List<Car> findAllByLocation_City(String city);
-    Car findByIdCar(Integer idCar);
-    void deleteByIdCar(Integer idCar);
+    boolean existsById(Integer id);
 }

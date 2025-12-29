@@ -7,11 +7,14 @@ import com.example.backend.models.Location;
 import com.example.backend.repositories.CarRepository;
 import com.example.backend.repositories.CarStatusRepository;
 import com.example.backend.repositories.LocationRepository;
-import org.springframework.stereotype.Repository;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-@Repository
+@Service
 public class CarService {
     private final CarRepository carRepository;
     private final LocationRepository locationRepository;
@@ -23,7 +26,7 @@ public class CarService {
         this.carStatusRepository = carStatusRepository;
     }
 
-    public List<Car> getAllCars(){
+    public List<Car> getAllCars() {
         return carRepository.findAll();
     }
 
@@ -32,7 +35,8 @@ public class CarService {
     }
 
     public Car getCarById(Integer id){
-        return carRepository.findById(id).orElse(null);
+        return carRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found"));
     }
 
     public void createCar(CarDTO dto) {
@@ -42,8 +46,11 @@ public class CarService {
         car.setPrice(dto.getPrice());
         car.setYear(dto.getYear());
 
-        CarStatus status = carStatusRepository.findById(dto.getIdStatus()).orElseThrow();
-        Location location = locationRepository.findById(dto.getIdLocation()).orElseThrow();
+        CarStatus status = carStatusRepository.findById(dto.getIdStatus())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Status not found"));
+
+        Location location = locationRepository.findById(dto.getIdLocation())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
 
         car.setCarStatus(status);
         car.setLocation(location);
@@ -52,6 +59,10 @@ public class CarService {
     }
 
     public void deleteCar(Integer id){
-        carRepository.deleteByIdCar(id);
+        if(!carRepository.existsById(id)){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found");
+        }
+
+        carRepository.deleteById(id);
     }
 }
