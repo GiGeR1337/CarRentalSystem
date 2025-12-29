@@ -1,5 +1,6 @@
 package com.example.backend.services;
 
+import com.example.backend.dtos.LocationDTO;
 import com.example.backend.models.Location;
 import com.example.backend.repositories.LocationRepository;
 import jakarta.annotation.PostConstruct;
@@ -23,7 +24,12 @@ public class LocationService {
         return locationRepository.findById(id).orElse(null);
     }
 
-    public Location saveLocation(Location location) {
+    public Location createLocation(LocationDTO locationDTO) {
+        Location location = new Location();
+
+        location.setAddress(locationDTO.getAddress());
+        location.setCity(locationDTO.getCity());
+
         return locationRepository.save(location);
     }
 

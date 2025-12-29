@@ -4,8 +4,10 @@ import com.example.backend.dtos.UserRegistrationDTO;
 import com.example.backend.dtos.UserResponseDTO;
 import com.example.backend.models.User;
 import com.example.backend.repositories.UserRepository;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.stream.Collectors;
@@ -33,12 +35,49 @@ public class UserService {
                 .collect(Collectors.toList());
     }
 
-    public User getUserById(Integer id) {
-        return userRepository.findById(id).orElse(null);
+    public UserResponseDTO getUserById(Integer id) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
+
+        return new UserResponseDTO(
+                user.getIdUser(),
+                user.getName(),
+                user.getSurname(),
+                user.getEmail(),
+                user.getPhoneNumber()
+        );
     }
 
-    public User getUserByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserResponseDTO getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + email);
+        }
+
+        return new UserResponseDTO(
+                user.getIdUser(),
+                user.getName(),
+                user.getSurname(),
+                user.getEmail(),
+                user.getPhoneNumber()
+        );
+    }
+
+    public UserResponseDTO getUserByPhoneNumber(String phoneNumber) {
+        User user = userRepository.findByPhoneNumber(phoneNumber);
+
+        if (user == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with phone number: " + phoneNumber);
+        }
+
+        return new UserResponseDTO(
+                user.getIdUser(),
+                user.getName(),
+                user.getSurname(),
+                user.getEmail(),
+                user.getPhoneNumber()
+        );
     }
 
     public UserResponseDTO registerUser(UserRegistrationDTO dto) {
@@ -63,6 +102,9 @@ public class UserService {
     }
 
     public void deleteUser(Integer id) {
+        if (!userRepository.existsById(id)) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with ID: " + id);
+        }
         userRepository.deleteById(id);
     }
 }
