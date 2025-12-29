@@ -3,7 +3,9 @@ package com.example.backend.services;
 import com.example.backend.models.Role;
 import com.example.backend.repositories.RoleRepository;
 import jakarta.annotation.PostConstruct;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -20,7 +22,8 @@ public class RoleService {
     }
 
     public Role getRoleById(Integer id) {
-        return roleRepository.findById(id).orElse(null);
+        return roleRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Role not found"));
     }
 
     @PostConstruct
