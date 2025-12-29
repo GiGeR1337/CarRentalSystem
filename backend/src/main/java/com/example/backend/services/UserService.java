@@ -1,6 +1,7 @@
 package com.example.backend.services;
 
 import com.example.backend.dtos.UserRegistrationDTO;
+import com.example.backend.dtos.UserResponseDTO;
 import com.example.backend.models.User;
 import com.example.backend.repositories.UserRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,16 +31,25 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
-    public User registerUser(UserRegistrationDTO dto) {
+    public UserResponseDTO registerUser(UserRegistrationDTO dto) {
         User user = new User();
         user.setName(dto.getName());
         user.setSurname(dto.getSurname());
         user.setEmail(dto.getEmail());
         user.setPhoneNumber(dto.getPhoneNumber());
 
-        user.setHashPassword(dto.getPassword());
+        String hashedPassword = passwordEncoder.encode(dto.getPassword());
+        user.setHashPassword(hashedPassword);
 
-        return userRepository.save(user);
+        User savedUser = userRepository.save(user);
+
+        return new UserResponseDTO(
+                savedUser.getIdUser(),
+                savedUser.getName(),
+                savedUser.getSurname(),
+                savedUser.getEmail(),
+                savedUser.getPhoneNumber()
+        );
     }
 
     public void deleteUser(Integer id) {
