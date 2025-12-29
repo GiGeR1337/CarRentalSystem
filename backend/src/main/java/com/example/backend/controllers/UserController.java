@@ -23,7 +23,7 @@ public class UserController {
         return userService.getAllUsers();
     }
 
-    @GetMapping("/id/{id}")
+    @GetMapping("/{id}")
     public UserResponseDTO getUserById(@PathVariable Integer id) {
         return userService.getUserById(id);
     }

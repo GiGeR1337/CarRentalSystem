@@ -4,7 +4,9 @@ import com.example.backend.dtos.LocationDTO;
 import com.example.backend.models.Location;
 import com.example.backend.repositories.LocationRepository;
 import jakarta.annotation.PostConstruct;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -21,7 +23,8 @@ public class LocationService {
     }
 
     public Location getLocationById(Integer id) {
-        return locationRepository.findById(id).orElse(null);
+        return locationRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
     }
 
     public Location createLocation(LocationDTO locationDTO) {
