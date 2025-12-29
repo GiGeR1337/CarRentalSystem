@@ -9,6 +9,9 @@ import java.util.List;
 @Repository
 public interface UserRepository extends JpaRepository<User, Integer> {
     List<User> findAll();
+    User findByEmail(String email);
     User findUserByIdUser(Integer idUser);
     void deleteUserByIdUser(Integer idUser);
+    boolean existsUserByEmail(String email);
+    boolean existsUserByPhoneNumber(String phoneNumber);
 }
