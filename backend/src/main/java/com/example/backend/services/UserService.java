@@ -2,7 +2,9 @@ package com.example.backend.services;
 
 import com.example.backend.dtos.UserRegistrationDTO;
 import com.example.backend.dtos.UserResponseDTO;
+import com.example.backend.models.Role;
 import com.example.backend.models.User;
+import com.example.backend.repositories.RoleRepository;
 import com.example.backend.repositories.UserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -16,10 +18,12 @@ import java.util.stream.Collectors;
 public class UserService {
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final RoleRepository roleRepository;
 
-    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, PasswordEncoder passwordEncoder, RoleRepository roleRepository) {
         this.userRepository = userRepository;
         this.passwordEncoder = passwordEncoder;
+        this.roleRepository = roleRepository;
     }
 
     public List<UserResponseDTO> getAllUsers() {
@@ -49,11 +53,8 @@ public class UserService {
     }
 
     public UserResponseDTO getUserByEmail(String email) {
-        User user = userRepository.findByEmail(email);
-
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + email);
-        }
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with email: " + email));
 
         return new UserResponseDTO(
                 user.getIdUser(),
@@ -65,11 +66,8 @@ public class UserService {
     }
 
     public UserResponseDTO getUserByPhoneNumber(String phoneNumber) {
-        User user = userRepository.findByPhoneNumber(phoneNumber);
-
-        if (user == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with phone number: " + phoneNumber);
-        }
+        User user = userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found with phone number: " + phoneNumber));
 
         return new UserResponseDTO(
                 user.getIdUser(),
@@ -89,6 +87,11 @@ public class UserService {
 
         String hashedPassword = passwordEncoder.encode(dto.getPassword());
         user.setHashPassword(hashedPassword);
+
+        Role userRole = roleRepository.findByRoleName("ROLE_USER")
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Default role not found"));
+
+        user.getRoles().add(userRole);
 
         User savedUser = userRepository.save(user);
 
