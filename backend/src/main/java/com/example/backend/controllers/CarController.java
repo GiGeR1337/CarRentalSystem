@@ -4,6 +4,7 @@ import com.example.backend.dtos.CarDTO;
 import com.example.backend.models.Car;
 import com.example.backend.services.CarService;
 import jakarta.validation.Valid;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -34,11 +35,13 @@ public class CarController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public void createCar(@Valid @RequestBody CarDTO carDTO){
         carService.createCar(carDTO);
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteCar(@PathVariable Integer id){
         carService.deleteCar(id);
     }

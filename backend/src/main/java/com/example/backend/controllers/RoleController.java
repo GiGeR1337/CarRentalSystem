@@ -2,9 +2,8 @@ package com.example.backend.controllers;
 
 import com.example.backend.models.Role;
 import com.example.backend.services.RoleService;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -19,11 +18,13 @@ public class RoleController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<Role> getAllRoles() {
         return roleService.getAllRoles();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public Role getRoleById(@PathVariable Integer id) {
         return roleService.getRoleById(id);
     }

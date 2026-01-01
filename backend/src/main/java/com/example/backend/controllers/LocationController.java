@@ -4,9 +4,8 @@ import com.example.backend.dtos.LocationDTO;
 import com.example.backend.models.Location;
 import com.example.backend.services.LocationService;
 import jakarta.validation.Valid;
-import org.springframework.http.HttpStatus;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -31,11 +30,13 @@ public class LocationController {
     }
 
     @PostMapping("/create")
+    @PreAuthorize("hasRole('ADMIN')")
     public Location createLocation(@Valid @RequestBody LocationDTO locationDTO) {
         return locationService.createLocation(locationDTO);
     }
 
     @DeleteMapping("/delete/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
     public void deleteLocation(@PathVariable Integer id) {
         locationService.deleteLocation(id);
     }

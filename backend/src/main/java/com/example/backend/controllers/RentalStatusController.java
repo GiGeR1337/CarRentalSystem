@@ -2,6 +2,7 @@ package com.example.backend.controllers;
 
 import com.example.backend.models.RentalStatus;
 import com.example.backend.services.RentalStatusService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class RentalStatusController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('USER')")
     public List<RentalStatus> getAllRentalStatuses() {
         return rentalStatusService.getAllRentalStatuses();
     }

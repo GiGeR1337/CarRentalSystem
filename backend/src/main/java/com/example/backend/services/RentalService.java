@@ -3,6 +3,7 @@ package com.example.backend.services;
 import com.example.backend.dtos.RentalDTO;
 import com.example.backend.models.*;
 import com.example.backend.repositories.*;
+import jakarta.transaction.Transactional;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -41,6 +42,7 @@ public class RentalService {
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 
+    @Transactional
     public void createRental(RentalDTO dto, String userEmail) {
         if (dto.getDateFrom().isAfter(dto.getDateTo())) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start date cannot be after end date");

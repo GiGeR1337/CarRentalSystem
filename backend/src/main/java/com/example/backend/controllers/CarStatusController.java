@@ -2,6 +2,7 @@ package com.example.backend.controllers;
 
 import com.example.backend.models.CarStatus;
 import com.example.backend.services.CarStatusService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -17,6 +18,7 @@ public class CarStatusController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasRole('ADMIN')")
     public List<CarStatus> getAllCarStatuses() {
         return carStatusService.getAllCarStatuses();
     }
