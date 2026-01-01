@@ -9,6 +9,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.math.BigDecimal;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 @Service
 public class RentalService {
@@ -24,6 +25,20 @@ public class RentalService {
         this.userRepository = userRepository;
         this.rentalStatusRepository = rentalStatusRepository;
         this.carStatusRepository = carStatusRepository;
+    }
+
+    public List<Rental> getAllRentalsByIdCar(Integer id){
+        return rentalRepository.findAllByCar_IdCar(id);
+    }
+
+    public List<Rental> getAllRentalsByIdUser(Integer id){
+        return rentalRepository.findAllByUser_IdUser(id);
+    }
+
+    public Integer getUserIdByEmail(String email) {
+        return userRepository.findByEmail(email)
+                .map(User::getIdUser)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found"));
     }
 
     public void createRental(RentalDTO dto, String userEmail) {
