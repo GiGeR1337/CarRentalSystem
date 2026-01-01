@@ -1,5 +1,6 @@
 package com.example.backend.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import java.util.Set;
 
@@ -22,6 +23,7 @@ public class User {
     private String email;
 
     @Column(name = "HashPassword", nullable = false, length = 250)
+    @JsonIgnore
     private String hashPassword;
 
     @Column(name = "PhoneNumber", nullable = false, length = 50)
