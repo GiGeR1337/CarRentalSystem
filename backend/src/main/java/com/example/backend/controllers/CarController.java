@@ -46,4 +46,10 @@ public class CarController {
     public void deleteCar(@PathVariable Integer id){
         carService.deleteCar(id);
     }
+
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public void updateCar(@PathVariable Integer id, @Valid @RequestBody CarDTO carDTO) {
+        carService.updateCar(id, carDTO);
+    }
 }

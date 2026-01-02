@@ -58,4 +58,13 @@ public class LocationService {
         loc.setAddress(address);
         locationRepository.save(loc);
     }
+
+    public Location updateLocation(Integer id, LocationDTO locationDTO) {
+        Location location = getLocationById(id);
+
+        location.setCity(locationDTO.getCity());
+        location.setAddress(locationDTO.getAddress());
+
+        return locationRepository.save(location);
+    }
 }

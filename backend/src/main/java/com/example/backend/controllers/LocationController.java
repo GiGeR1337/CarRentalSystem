@@ -42,4 +42,10 @@ public class LocationController {
     public void deleteLocation(@PathVariable Integer id) {
         locationService.deleteLocation(id);
     }
+
+    @PutMapping("/update/{id}")
+    @PreAuthorize("hasRole('ADMIN')")
+    public Location updateLocation(@PathVariable Integer id, @Valid @RequestBody LocationDTO locationDTO) {
+        return locationService.updateLocation(id, locationDTO);
+    }
 }

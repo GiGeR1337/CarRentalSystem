@@ -65,4 +65,23 @@ public class CarService {
 
         carRepository.deleteById(id);
     }
+
+    public void updateCar(Integer id, CarDTO dto) {
+        Car car = getCarById(id);
+
+        car.setBrand(dto.getBrand());
+        car.setModel(dto.getModel());
+        car.setPrice(dto.getPrice());
+        car.setYear(dto.getYear());
+
+        CarStatus status = carStatusRepository.findById(dto.getIdStatus())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Status not found"));
+        car.setCarStatus(status);
+
+        Location location = locationRepository.findById(dto.getIdLocation())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Location not found"));
+        car.setLocation(location);
+
+        carRepository.save(car);
+    }
 }
