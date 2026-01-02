@@ -81,4 +81,52 @@ public class RentalService {
         car.setCarStatus(rentedCarStatus);
         carRepository.save(car);
     }
+
+    public void cancelRental(Integer rentalId, String userEmail) {
+        Rental rental = rentalRepository.findById(rentalId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rental not found"));
+
+        if (!rental.getUser().getEmail().equals(userEmail)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only cancel your own rentals");
+        }
+
+        RentalStatus cancelledStatus = rentalStatusRepository.findByStatus("CANCELLED")
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Status 'CANCELLED' not found"));
+        rental.setRentalStatus(cancelledStatus);
+
+        Car car = rental.getCar();
+        CarStatus availableStatus = carStatusRepository.findByStatus("AVAILABLE")
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Status 'AVAILABLE' not found"));
+        car.setCarStatus(availableStatus);
+
+        carRepository.save(car);
+        rentalRepository.save(rental);
+    }
+
+    public void updateMyRental(Integer rentalId, RentalDTO dto, String userEmail) {
+        Rental rental = rentalRepository.findById(rentalId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Rental not found"));
+
+        if (!rental.getUser().getEmail().equals(userEmail)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "You can only update your own rentals");
+        }
+
+        if (!"ACTIVE".equalsIgnoreCase(rental.getRentalStatus().getStatus())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot update a completed or cancelled rental");
+        }
+
+        if (dto.getDateFrom().isAfter(dto.getDateTo())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start date cannot be after end date");
+        }
+
+        rental.setDateFrom(dto.getDateFrom());
+        rental.setDateTo(dto.getDateTo());
+
+        Car car = rental.getCar();
+        long days = ChronoUnit.DAYS.between(dto.getDateFrom(), dto.getDateTo());
+        if (days == 0) days = 1;
+        rental.setFinalPrice(car.getPrice().multiply(BigDecimal.valueOf(days)));
+
+        rentalRepository.save(rental);
+    }
 }

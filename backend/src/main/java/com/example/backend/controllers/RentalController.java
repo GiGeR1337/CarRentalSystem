@@ -45,4 +45,16 @@ public class RentalController {
 
         rentalService.createRental(rentalDTO, userEmail);
     }
+
+    @PutMapping("/cancel/{id}")
+    @PreAuthorize("hasAnyRole('USER', 'ADMIN')")
+    public void cancelRental(@PathVariable Integer id, Authentication authentication) {
+        rentalService.cancelRental(id, authentication.getName());
+    }
+
+    @PutMapping("/my-update/{id}")
+    @PreAuthorize("hasRole('USER')")
+    public void updateMyRental(@PathVariable Integer id, @RequestBody RentalDTO rentalDTO, Authentication authentication) {
+        rentalService.updateMyRental(id, rentalDTO, authentication.getName());
+    }
 }
