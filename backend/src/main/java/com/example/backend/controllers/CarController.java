@@ -25,6 +25,7 @@ public class CarController {
     }
 
     @GetMapping("/id/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public Car getCarById(@PathVariable Integer id){
         return carService.getCarById(id);
     }

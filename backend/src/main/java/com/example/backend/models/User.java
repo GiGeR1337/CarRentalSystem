@@ -2,6 +2,8 @@ package com.example.backend.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
+
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -35,7 +37,7 @@ public class User {
             joinColumns = @JoinColumn(name = "IdUser"),
             inverseJoinColumns = @JoinColumn(name = "IdRole")
     )
-    private Set<Role> roles;
+    private Set<Role> roles = new HashSet<>();
 
     public User() {}
 

@@ -27,7 +27,9 @@ public class AuthController {
                 new UsernamePasswordAuthenticationToken(loginDTO.getEmail(), loginDTO.getPassword())
         );
 
-        String jwtToken = jwtUtil.generateToken(authentication.getName());
+        String role = authentication.getAuthorities().iterator().next().getAuthority();
+
+        String jwtToken = jwtUtil.generateToken(authentication.getName(), role);
         return ResponseEntity.ok(java.util.Collections.singletonMap("token", jwtToken));
     }
 

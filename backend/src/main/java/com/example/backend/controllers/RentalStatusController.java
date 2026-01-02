@@ -18,7 +18,7 @@ public class RentalStatusController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasRole('Admin')")
     public List<RentalStatus> getAllRentalStatuses() {
         return rentalStatusService.getAllRentalStatuses();
     }

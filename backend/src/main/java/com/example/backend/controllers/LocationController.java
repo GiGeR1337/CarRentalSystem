@@ -20,11 +20,13 @@ public class LocationController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<Location> getAllLocations() {
         return locationService.getAllLocations();
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public Location getLocationById(@PathVariable Integer id) {
         return locationService.getLocationById(id);
     }

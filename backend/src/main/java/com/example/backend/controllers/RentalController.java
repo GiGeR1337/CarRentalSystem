@@ -31,7 +31,7 @@ public class RentalController {
     }
 
     @GetMapping("/my-history")
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public List<Rental> getMyRentals(Authentication authentication){
         String email = authentication.getName();
         Integer userId = rentalService.getUserIdByEmail(email);
@@ -39,7 +39,7 @@ public class RentalController {
     }
 
     @PostMapping
-    @PreAuthorize("hasRole('USER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'USER')")
     public void rentCar(@RequestBody RentalDTO rentalDTO, Authentication authentication) {
         String userEmail = authentication.getName();
 
