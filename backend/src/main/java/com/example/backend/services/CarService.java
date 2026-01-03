@@ -69,6 +69,10 @@ public class CarService {
     public void updateCar(Integer id, CarDTO dto) {
         Car car = getCarById(id);
 
+        if (!"AVAILABLE".equalsIgnoreCase(car.getCarStatus().getStatus())) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Car is currently not available. Please, try later");
+        }
+
         car.setBrand(dto.getBrand());
         car.setModel(dto.getModel());
         car.setPrice(dto.getPrice());
