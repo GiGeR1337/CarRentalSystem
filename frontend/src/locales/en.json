@@ -1,0 +1,171 @@
+{
+  "navbar": {
+    "home": "Home",
+    "myRentals": "My Rentals",
+    "dashboard": "Dashboard",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "home": {
+    "title": "Available Fleet",
+    "ready": "vehicles ready",
+    "bookNow": "Rent Now",
+    "rented": "Currently Rented",
+
+    "error_load": "Failed to load available cars."
+  },
+  "rentals": {
+    "title": "My Rental History",
+    "bookings": "bookings",
+    "empty": "You haven't rented any cars yet.",
+    "browse": "Browse Available Cars",
+    "col_vehicle": "Vehicle Info",
+    "col_period": "Rental Period",
+    "col_cost": "Total Cost",
+    "col_status": "Status",
+    "col_manage": "Manage",
+    "btn_edit": "Edit / Cancel",
+    "status_closed": "Closed",
+
+    "manage_header": "Manage Booking #{{id}}",
+    "start_date": "Start Date",
+    "end_date": "End Date",
+    "btn_update": "Update Dates",
+    "btn_cancel_rental": "Cancel Rental",
+    "btn_back": "Back",
+
+    "select_dates": "Select Dates",
+    "pickup_date": "Pick-up Date",
+    "return_date": "Return Date",
+    "total_estimate": "Total Estimate",
+    "btn_book": "Confirm Booking",
+    "processing": "Processing...",
+    "available_now": "Available Now",
+    "location": "Location",
+    "year": "Year",
+    "per_day": "/ day",
+
+    "error_not_found": "Rental not found",
+    "error_update": "Failed to update. Check dates.",
+    "error_cancel": "Failed to cancel.",
+    "error_date_invalid": "End date cannot be before start date.",
+    "error_booking": "Booking failed. Car might be unavailable.",
+    "error_load": "Failed to load rental history.",
+
+    "success_update": "Rental updated successfully!",
+    "success_cancel": "Rental cancelled successfully.",
+    "success_booking": "Booking confirmed! View it in My Rentals.",
+    "confirm_cancel": "Cancel this booking? Cannot be undone."
+  },
+  "auth": {
+    "welcome": "Welcome Back",
+    "createAccount": "Create Account",
+    "email": "Email Address",
+    "password": "Password",
+    "firstName": "First Name",
+    "lastName": "Last Name",
+    "phone": "Phone Number",
+    "signIn": "Sign In",
+    "registerNow": "Register Now",
+    "haveAccount": "Already have an account?",
+    "loginHere": "Login here",
+
+    "success_register": "Registration successful! Please login.",
+    "error_register": "Registration failed. Email might exist.",
+    "error_login": "Invalid email or password."
+  },
+  "common": {
+    "loading": "Loading...",
+    "cancel": "Cancel",
+    "confirm": "Confirm",
+    "delete": "Delete",
+    "save": "Save Changes",
+    "edit": "Edit",
+    "previous": "Previous",
+    "next": "Next",
+    "page_info": "Page {{current}} of {{total}}"
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Admin Control Center",
+      "users_title": "Users",
+      "users_desc": "View & ban users",
+      "cars_title": "Cars",
+      "cars_desc": "Add & edit fleet",
+      "loc_title": "Locations",
+      "loc_desc": "Manage hubs",
+      "btn_manage": "Manage"
+    },
+    "users": {
+      "title": "User Management",
+      "count": "registered users",
+      "col_id": "User ID",
+      "col_name": "Full Name",
+      "col_email": "Email",
+      "col_phone": "Phone",
+      "col_actions": "Actions",
+      "btn_delete": "Delete User",
+      "confirm_delete": "Are you sure you want to delete this user?",
+      "error_delete": "Failed to delete user.",
+      "success_delete": "User deleted successfully."
+    },
+    "cars": {
+      "title": "Fleet Management",
+      "btn_add": "+ Add Vehicle",
+      "col_car": "Car",
+      "col_rate": "Daily Rate",
+      "col_status": "Status",
+      "col_location": "Location",
+      "col_actions": "Actions",
+      "confirm_delete": "Delete this car?",
+      "error_delete": "Failed to delete car.",
+      "success_delete": "Car deleted successfully."
+    },
+    "create_car": {
+      "title": "Add New Vehicle",
+      "brand": "Brand",
+      "model": "Model",
+      "price": "Price / Day",
+      "year": "Year",
+      "location": "Location",
+      "status": "Status",
+      "btn_create": "Create Car",
+      "success": "Car created successfully!",
+      "error": "Failed to create car."
+    },
+    "edit_car": {
+      "title": "Edit Vehicle #{{id}}",
+      "error_load": "Error loading car.",
+      "error_update": "Failed to update. Car might be rented.",
+      "success_update": "Car updated successfully!"
+    },
+    "locations": {
+      "title": "Locations / Hubs",
+      "btn_add": "+ Add Location",
+      "alert_create": "Create Page not implemented yet!",
+      "col_id": "ID",
+      "col_city": "City",
+      "col_address": "Full Address",
+      "col_actions": "Actions",
+      "confirm_delete": "Delete this location?",
+      "error_delete": "Cannot delete location (might be in use).",
+      "success_delete": "Location deleted successfully."
+    },
+    "edit_location": {
+      "title": "Edit Location",
+      "city": "City",
+      "address": "Full Address",
+      "error_update": "Failed to update location.",
+      "success_update": "Location updated successfully!"
+    },
+    "create_location": {
+      "title": "Add New Location",
+      "city": "City",
+      "address": "Full Address",
+      "btn_create": "Create Location",
+      "success": "Location created successfully!",
+      "error": "Failed to create location."
+    }
+  }
+}

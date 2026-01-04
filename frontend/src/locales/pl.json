@@ -1,0 +1,171 @@
+{
+  "navbar": {
+    "home": "Strona Główna",
+    "myRentals": "Moje Wypożyczenia",
+    "dashboard": "Panel Admina",
+    "login": "Zaloguj się",
+    "register": "Rejestracja",
+    "logout": "Wyloguj"
+  },
+  "home": {
+    "title": "Dostępna Flota",
+    "ready": "pojazdów gotowych",
+    "bookNow": "Rezerwuj",
+    "rented": "Wynajęty",
+
+    "error_load": "Nie udało się pobrać listy samochodów."
+  },
+  "rentals": {
+    "title": "Historia Wypożyczeń",
+    "bookings": "rezerwacji",
+    "empty": "Nie wypożyczyłeś jeszcze żadnego samochodu.",
+    "browse": "Przeglądaj Samochody",
+    "col_vehicle": "Pojazd",
+    "col_period": "Okres Wynajmu",
+    "col_cost": "Koszt Całkowity",
+    "col_status": "Status",
+    "col_manage": "Zarządzaj",
+    "btn_edit": "Edytuj / Anuluj",
+    "status_closed": "Zamknięte",
+
+    "manage_header": "Zarządzaj Rezerwacją #{{id}}",
+    "start_date": "Data Rozpoczęcia",
+    "end_date": "Data Zakończenia",
+    "btn_update": "Zaktualizuj Daty",
+    "btn_cancel_rental": "Anuluj Wypożyczenie",
+    "btn_back": "Powrót",
+
+    "select_dates": "Wybierz Daty",
+    "pickup_date": "Data Odbioru",
+    "return_date": "Data Zwrotu",
+    "total_estimate": "Szacowany Koszt",
+    "btn_book": "Potwierdź Rezerwację",
+    "processing": "Przetwarzanie...",
+    "available_now": "Dostępny Teraz",
+    "location": "Lokalizacja",
+    "year": "Rok",
+    "per_day": "/ dzień",
+
+    "error_not_found": "Nie znaleziono rezerwacji",
+    "error_update": "Błąd aktualizacji. Sprawdź daty.",
+    "error_cancel": "Nie udało się anulować.",
+    "error_date_invalid": "Data zakończenia nie może być przed datą rozpoczęcia.",
+    "error_booking": "Rezerwacja nieudana. Samochód może być niedostępny.",
+    "error_load": "Nie udało się pobrać historii wypożyczeń.",
+
+    "success_update": "Rezerwacja zaktualizowana pomyślnie!",
+    "success_cancel": "Wypożyczenie anulowane pomyślnie.",
+    "success_booking": "Rezerwacja potwierdzona! Sprawdź w Moich Wypożyczeniach.",
+    "confirm_cancel": "Anulować rezerwację? Tej operacji nie można cofnąć."
+  },
+  "auth": {
+    "welcome": "Witaj Ponownie",
+    "createAccount": "Utwórz Konto",
+    "email": "Adres Email",
+    "password": "Hasło",
+    "firstName": "Imię",
+    "lastName": "Nazwisko",
+    "phone": "Numer Telefonu",
+    "signIn": "Zaloguj się",
+    "registerNow": "Zarejestruj się",
+    "haveAccount": "Masz już konto?",
+    "loginHere": "Zaloguj się tutaj",
+
+    "success_register": "Rejestracja pomyślna! Zaloguj się.",
+    "error_register": "Rejestracja nieudana. Email może być zajęty.",
+    "error_login": "Błędny email lub hasło."
+  },
+  "common": {
+    "loading": "Ładowanie...",
+    "cancel": "Anuluj",
+    "confirm": "Potwierdź",
+    "delete": "Usuń",
+    "save": "Zapisz Zmiany",
+    "edit": "Edytuj",
+    "previous": "Poprzednia",
+    "next": "Następna",
+    "page_info": "Strona {{current}} z {{total}}"
+  },
+  "admin": {
+    "dashboard": {
+      "title": "Centrum Sterowania",
+      "users_title": "Użytkownicy",
+      "users_desc": "Przeglądaj i blokuj",
+      "cars_title": "Samochody",
+      "cars_desc": "Dodaj i edytuj flotę",
+      "loc_title": "Lokalizacje",
+      "loc_desc": "Zarządzaj oddziałami",
+      "btn_manage": "Zarządzaj"
+    },
+    "users": {
+      "title": "Zarządzanie Użytkownikami",
+      "count": "zarejestrowanych",
+      "col_id": "ID Użytkownika",
+      "col_name": "Imię i Nazwisko",
+      "col_email": "Email",
+      "col_phone": "Telefon",
+      "col_actions": "Akcje",
+      "btn_delete": "Usuń Użytkownika",
+      "confirm_delete": "Czy na pewno chcesz usunąć tego użytkownika?",
+      "error_delete": "Nie udało się usunąć użytkownika.",
+      "success_delete": "Użytkownik został usunięty."
+    },
+    "cars": {
+      "title": "Zarządzanie Flotą",
+      "btn_add": "+ Dodaj Pojazd",
+      "col_car": "Samochód",
+      "col_rate": "Stawka Dzienna",
+      "col_status": "Status",
+      "col_location": "Lokalizacja",
+      "col_actions": "Akcje",
+      "confirm_delete": "Usunąć ten samochód?",
+      "error_delete": "Nie udało się usunąć samochodu.",
+      "success_delete": "Samochód został usunięty."
+    },
+    "create_car": {
+      "title": "Dodaj Nowy Pojazd",
+      "brand": "Marka",
+      "model": "Model",
+      "price": "Cena / Dzień",
+      "year": "Rok",
+      "location": "ID Lokalizacji",
+      "status": "ID Statusu",
+      "btn_create": "Utwórz",
+      "success": "Pojazd utworzony pomyślnie!",
+      "error": "Nie udało się utworzyć pojazdu."
+    },
+    "edit_car": {
+      "title": "Edytuj Pojazd #{{id}}",
+      "error_load": "Błąd ładowania danych.",
+      "error_update": "Błąd aktualizacji. Auto może być wynajęte.",
+      "success_update": "Pojazd zaktualizowany pomyślnie!"
+    },
+    "locations": {
+      "title": "Lokalizacje / Oddziały",
+      "btn_add": "+ Dodaj Lokalizację",
+      "alert_create": "Strona tworzenia jeszcze nie istnieje!",
+      "col_id": "ID",
+      "col_city": "Miasto",
+      "col_address": "Pełny Adres",
+      "col_actions": "Akcje",
+      "confirm_delete": "Usunąć tę lokalizację?",
+      "error_delete": "Nie można usunąć (może być używana).",
+      "success_delete": "Lokalizacja została usunięta."
+    },
+    "edit_location": {
+      "title": "Edytuj Lokalizację",
+      "city": "Miasto",
+      "address": "Adres",
+      "error_update": "Nie udało się zaktualizować.",
+      "success_update": "Lokalizacja zaktualizowana pomyślnie!"
+    },
+    "create_location": {
+      "title": "Dodaj Nową Lokalizację",
+      "city": "Miasto",
+      "address": "Pełny Adres",
+      "btn_create": "Utwórz",
+      "success": "Lokalizacja utworzona pomyślnie!",
+      "error": "Nie udało się utworzyć lokalizacji."
+    }
+  }
+}
