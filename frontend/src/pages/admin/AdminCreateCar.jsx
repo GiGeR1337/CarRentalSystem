@@ -1,93 +1,96 @@
-import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import api from '../../api/axiosConfig';
+import {useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import CarService from '../../services/car.service';
+import {useTranslation} from 'react-i18next';
+import {toast} from 'react-toastify';
 
 const AdminCreateCar = () => {
     const navigate = useNavigate();
+    const {t} = useTranslation();
 
     const [formData, setFormData] = useState({
-        brand: '',
-        model: '',
-        price: '',
-        year: '',
-        idStatus: 1, // Default to 1 (Available)
-        idLocation: 1 // Default to 1 (Warsaw)
+        brand: '', model: '', price: '', year: '', idStatus: 1, idLocation: 1
     });
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await api.post('/cars/create', formData);
-            alert("Car created successfully!");
+            await CarService.create(formData);
+            toast.success(t('admin.create_car.success'));
             navigate('/admin/cars');
         } catch (err) {
-            console.error(err);
-            alert("Failed to create car. Check console for details.");
+            toast.error(t('admin.create_car.error'));
         }
     };
 
     return (
-        <div className="container mt-5" style={{maxWidth: '600px'}}>
-            <div className="card shadow p-4">
-                <h3 className="mb-4">Add New Car</h3>
+        <div className="container flex-center min-h-80vh">
+            <div className="card max-w-500px w-100">
+                <h3 className="mb-4">{t('admin.create_car.title')}</h3>
                 <form onSubmit={handleSubmit}>
-                    <div className="row mb-3">
-                        <div className="col">
-                            <label className="form-label">Brand</label>
-                            <input className="form-control"
-                                   value={formData.brand}
-                                   onChange={e => setFormData({...formData, brand: e.target.value})}
-                                   required />
+                    <div className="grid grid-2 mb-4">
+                        <div className="form-group">
+                            <label>{t('admin.create_car.brand')}</label>
+                            <input
+                                value={formData.brand}
+                                onChange={e => setFormData({...formData, brand: e.target.value})}
+                                required
+                            />
                         </div>
-                        <div className="col">
-                            <label className="form-label">Model</label>
-                            <input className="form-control"
-                                   value={formData.model}
-                                   onChange={e => setFormData({...formData, model: e.target.value})}
-                                   required />
+                        <div className="form-group">
+                            <label>{t('admin.create_car.model')}</label>
+                            <input
+                                value={formData.model}
+                                onChange={e => setFormData({...formData, model: e.target.value})}
+                                required
+                            />
                         </div>
                     </div>
 
-                    <div className="row mb-3">
-                        <div className="col">
-                            <label className="form-label">Price / Day</label>
-                            <input type="number" className="form-control"
+                    <div className="grid grid-2 mb-4">
+                        <div className="form-group">
+                            <label>{t('admin.create_car.price')}</label>
+                            <input type="number"
                                    value={formData.price}
                                    onChange={e => setFormData({...formData, price: e.target.value})}
-                                   required />
+                                   required
+                            />
                         </div>
-                        <div className="col">
-                            <label className="form-label">Year</label>
-                            <input type="number" className="form-control"
+                        <div className="form-group">
+                            <label>{t('admin.create_car.year')}</label>
+                            <input type="number"
                                    value={formData.year}
                                    onChange={e => setFormData({...formData, year: e.target.value})}
-                                   required />
+                                   required
+                            />
                         </div>
                     </div>
 
-                    <div className="row mb-4">
-                        <div className="col">
-                            <label className="form-label">Location ID</label>
-                            <input type="number" className="form-control"
+                    <div className="grid grid-2 mb-4">
+                        <div className="form-group">
+                            <label>{t('admin.create_car.location_id')} <span
+                                className="text-muted">{t('admin.create_car.helper_loc')}</span></label>
+                            <input type="number"
                                    value={formData.idLocation}
                                    onChange={e => setFormData({...formData, idLocation: e.target.value})}
                                    required
-                                   placeholder="e.g. 1"/>
-                            <small className="text-muted">1=Warsaw, 4=Krakow</small>
+                            />
                         </div>
-                        <div className="col">
-                            <label className="form-label">Status ID</label>
-                            <input type="number" className="form-control"
+                        <div className="form-group">
+                            <label>{t('admin.create_car.status_id')} <span
+                                className="text-muted">{t('admin.create_car.helper_status')}</span></label>
+                            <input type="number"
                                    value={formData.idStatus}
                                    onChange={e => setFormData({...formData, idStatus: e.target.value})}
-                                   required />
-                            <small className="text-muted">1=Available</small>
+                                   required
+                            />
                         </div>
                     </div>
 
-                    <div className="d-flex gap-2">
-                        <button type="submit" className="btn btn-success flex-grow-1">Create Car</button>
-                        <button type="button" onClick={() => navigate('/admin/cars')} className="btn btn-secondary">Cancel</button>
+                    <div className="flex gap-2 mt-4">
+                        <button type="submit" className="btn btn-success flex-1">{t('admin.create_car.btn_create')}</button>
+                        <button type="button" onClick={() => navigate('/admin/cars')}
+                                className="btn btn-outline">{t('common.cancel')}</button>
                     </div>
                 </form>
             </div>

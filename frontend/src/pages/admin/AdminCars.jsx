@@ -1,66 +1,92 @@
-import { useEffect, useState } from 'react';
-import api from '../../api/axiosConfig';
-import { useNavigate } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import CarService from '../../services/car.service';
+import {useTranslation} from 'react-i18next';
+import {toast} from 'react-toastify';
+import Pagination from "../../components/Pagination";
 
 const AdminCars = () => {
     const [cars, setCars] = useState([]);
     const navigate = useNavigate();
+    const {t} = useTranslation();
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 6;
 
     useEffect(() => {
-        api.get('/cars/all').then(res => setCars(res.data));
+        CarService.getAll().then(setCars);
     }, []);
 
     const handleDelete = async (id) => {
-        if (!window.confirm("Delete this car?")) return;
-        try {
-            await api.delete(`/cars/delete/${id}`);
-            setCars(cars.filter(c => c.idCar !== id));
-        } catch (err) {
-            alert("Failed to delete car.");
+        if (window.confirm(t('admin.cars.confirm_delete'))) {
+            try {
+                await CarService.delete(id);
+
+                const updatedCars = cars.filter(c => c.idCar !== id);
+                setCars(updatedCars);
+
+                const newTotalPages = Math.ceil(updatedCars.length / itemsPerPage);
+                if (currentPage > newTotalPages) {
+                    setCurrentPage(Math.max(1, newTotalPages));
+                }
+
+                toast.success(t('admin.cars.success_delete'));
+            } catch (err) {
+                toast.error(t('admin.cars.error_delete'));
+            }
         }
     };
 
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = cars.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(cars.length / itemsPerPage);
+
     return (
         <div className="container mt-4">
-            <div className="d-flex justify-content-between align-items-center">
-                <h2>Manage Cars</h2>
-                <button className="btn btn-primary" onClick={() => navigate('/admin/cars/create')}>+ Add New Car</button>
+            <div className="flex-between mb-4">
+                <h2>{t('admin.cars.title')}</h2>
+                <button onClick={() => navigate('/admin/cars/create')}
+                        className="btn btn-primary">{t('admin.cars.btn_add')}</button>
             </div>
-            <table className="table table-bordered mt-3">
-                <thead className="table-light">
-                <tr>
-                    <th>Brand/Model</th>
-                    <th>Price</th>
-                    <th>Status</th>
-                    <th>Location</th>
-                    <th>Actions</th>
-                </tr>
-                </thead>
-                <tbody>
-                {cars.map(c => (
-                    <tr key={c.idCar}>
-                        <td>{c.brand} {c.model} ({c.year})</td>
-                        <td>${c.price}</td>
-                        <td>{c.carStatus.status}</td>
-                        <td>{c.location.city}</td>
-                        <td>
-                            <button
-                                onClick={() => navigate(`/admin/cars/edit/${c.idCar}`)}
-                                className="btn btn-warning btn-sm me-2">
-                                Update
-                            </button>
-                            <button
-                                onClick={() => handleDelete(c.idCar)}
-                                className="btn btn-danger btn-sm">
-                                Delete
-                            </button>
-                        </td>
+            <div className="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>{t('admin.cars.col_car')}</th>
+                        <th>{t('admin.cars.col_rate')}</th>
+                        <th>{t('admin.cars.col_status')}</th>
+                        <th>{t('admin.cars.col_location')}</th>
+                        <th className="text-right">{t('admin.cars.col_actions')}</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {currentItems.map(c => (
+                        <tr key={c.idCar}>
+                            <td><strong>{c.brand} {c.model}</strong>
+                                <div className="text-muted">{c.year}</div>
+                            </td>
+                            <td>${c.price}</td>
+                            <td><span className={`badge ${c.carStatus.status}`}>{c.carStatus.status}</span></td>
+                            <td>{c.location.city}</td>
+                            <td className="text-right">
+                                <button onClick={() => navigate(`/admin/cars/edit/${c.idCar}`)} className="btn btn-outline btn-sm mr-2">{t('common.edit')}</button>
+                                <button onClick={() => handleDelete(c.idCar)} className="btn btn-danger btn-sm">{t('common.delete')}</button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {totalPages > 1 && (
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                />
+            )}
         </div>
     );
 };
-
 export default AdminCars;

@@ -1,49 +1,90 @@
-import { useEffect, useState } from 'react';
-import api from '../../api/axiosConfig';
-import { useNavigate } from 'react-router-dom';
+import {useEffect, useState} from 'react';
+import {useNavigate} from 'react-router-dom';
+import LocationService from '../../services/location.service';
+import {useTranslation} from 'react-i18next';
+import {toast} from 'react-toastify';
+import Pagination from "../../components/Pagination";
 
 const AdminLocations = () => {
     const [locations, setLocations] = useState([]);
     const navigate = useNavigate();
+    const {t} = useTranslation();
+
+    const [currentPage, setCurrentPage] = useState(1);
+    const itemsPerPage = 6;
 
     useEffect(() => {
-        api.get('/locations/all').then(res => setLocations(res.data));
+        LocationService.getAll().then(setLocations).catch(console.error);
     }, []);
 
     const handleDelete = async (id) => {
-        if (!window.confirm("Delete this location?")) return;
+        if (!window.confirm(t('admin.locations.confirm_delete'))) return;
         try {
-            await api.delete(`/locations/delete/${id}`);
-            setLocations(locations.filter(l => l.idLocation !== id));
+            await LocationService.delete(id);
+
+            const updatedLocations = locations.filter(l => l.idLocation !== id);
+            setLocations(updatedLocations);
+
+            const newTotalPages = Math.ceil(updatedLocations.length / itemsPerPage);
+            if (currentPage > newTotalPages) {
+                setCurrentPage(Math.max(1, newTotalPages));
+            }
+
+            toast.success(t('admin.locations.success_delete'));
         } catch (err) {
-            alert("Cannot delete location (might be used by cars).");
+            toast.error(t('admin.locations.error_delete'));
         }
     };
 
+    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = locations.slice(indexOfFirstItem, indexOfLastItem);
+    const totalPages = Math.ceil(locations.length / itemsPerPage);
+
     return (
         <div className="container mt-4">
-            <h2>Manage Locations</h2>
-            <table className="table table-hover mt-3">
-                <thead className="table-primary">
-                <tr>
-                    <th>City</th>
-                    <th>Address</th>
-                    <th>Action</th>
-                </tr>
-                </thead>
-                <tbody>
-                {locations.map(loc => (
-                    <tr key={loc.idLocation}>
-                        <td>{loc.city}</td>
-                        <td>{loc.address}</td>
-                        <td>
-                            <button onClick={() => navigate(`/admin/locations/edit/${loc.idLocation}`)} className="btn btn-warning btn-sm me-2">Update</button>
-                            <button onClick={() => handleDelete(loc.idLocation)} className="btn btn-danger btn-sm">Delete</button>
-                        </td>
+            <div className="flex-between mb-4">
+                <h2>{t('admin.locations.title')}</h2>
+                <button
+                    className="btn btn-primary"
+                    onClick={() => navigate('/admin/locations/create')}>
+                    {t('admin.locations.btn_add')}
+                </button>
+            </div>
+
+            <div className="table-container">
+                <table>
+                    <thead>
+                    <tr>
+                        <th>{t('admin.locations.col_id')}</th>
+                        <th>{t('admin.locations.col_city')}</th>
+                        <th>{t('admin.locations.col_address')}</th>
+                        <th className="text-right">{t('admin.locations.col_actions')}</th>
                     </tr>
-                ))}
-                </tbody>
-            </table>
+                    </thead>
+                    <tbody>
+                    {currentItems.map(loc => (
+                        <tr key={loc.idLocation}>
+                            <td>#{loc.idLocation}</td>
+                            <td><strong>{loc.city}</strong></td>
+                            <td>{loc.address}</td>
+                            <td className="text-right">
+                                <button onClick={() => navigate(`/admin/locations/edit/${loc.idLocation}`)} className="btn btn-outline btn-sm mr-2">{t('common.edit')}</button>
+                                <button onClick={() => handleDelete(loc.idLocation)} className="btn btn-danger btn-sm">{t('common.delete')}</button>
+                            </td>
+                        </tr>
+                    ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {totalPages > 1 && (
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={setCurrentPage}
+                />
+            )}
         </div>
     );
 };

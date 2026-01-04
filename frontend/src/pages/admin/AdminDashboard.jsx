@@ -1,45 +1,64 @@
 import { Link } from 'react-router-dom';
+import useAuth from '../hooks/useAuth';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher';
 
-const AdminDashboard = () => {
+const Navbar = () => {
+    const { user, logout } = useAuth();
+    const { t } = useTranslation();
+
     return (
-        <div className="container mt-5">
-            <h2 className="text-center mb-5">Admin Dashboard</h2>
-            <div className="row g-4">
-                {/* Users Module */}
-                <div className="col-md-4">
-                    <div className="card text-center h-100 shadow-sm border-primary">
-                        <div className="card-body d-flex flex-column justify-content-center p-5">
-                            <h3 className="card-title text-primary">Users</h3>
-                            <p className="card-text">Manage registered users.</p>
-                            <Link to="/admin/users" className="btn btn-primary mt-3">Manage Users</Link>
-                        </div>
-                    </div>
+        <nav className="border-bottom bg-card py-3 mb-4">
+            <div className="container flex-between">
+
+                <div className="flex-align-center gap-3">
+                    <Link to="/" className="text-xl font-extrabold text-primary">
+                        ⚡CarRental
+                    </Link>
                 </div>
 
-                {/* Cars Module */}
-                <div className="col-md-4">
-                    <div className="card text-center h-100 shadow-sm border-success">
-                        <div className="card-body d-flex flex-column justify-content-center p-5">
-                            <h3 className="card-title text-success">Cars</h3>
-                            <p className="card-text">Update or delete vehicles.</p>
-                            <Link to="/admin/cars" className="btn btn-success mt-3">Manage Cars</Link>
-                        </div>
-                    </div>
+                <div className="flex gap-4">
+                    <Link to="/" className="text-main font-medium">
+                        {t('navbar.home')}
+                    </Link>
+
+                    {user && (
+                        <Link to="/my-rentals" className="text-main font-medium">
+                            {t('navbar.myRentals')}
+                        </Link>
+                    )}
+
+                    {user?.role === 'ROLE_ADMIN' && (
+                        <Link to="/admin" className="text-primary font-semibold">
+                            {t('navbar.dashboard')}
+                        </Link>
+                    )}
                 </div>
 
-                {/* Locations Module */}
-                <div className="col-md-4">
-                    <div className="card text-center h-100 shadow-sm border-warning">
-                        <div className="card-body d-flex flex-column justify-content-center p-5">
-                            <h3 className="card-title text-warning">Locations</h3>
-                            <p className="card-text">Edit pickup locations.</p>
-                            <Link to="/admin/locations" className="btn btn-warning mt-3">Manage Locations</Link>
-                        </div>
-                    </div>
+                <div className="flex-center gap-2">
+                    {user ? (
+                        <>
+                            <span className="text-muted mr-2">{user.email}</span>
+                            <button onClick={logout} className="btn btn-outline btn-sm">
+                                {t('navbar.logout')}
+                            </button>
+                        </>
+                    ) : (
+                        <>
+                            <Link to="/login" className="btn btn-outline btn-sm">
+                                {t('navbar.login')}
+                            </Link>
+                            <Link to="/register" className="btn btn-primary btn-sm">
+                                {t('navbar.register')}
+                            </Link>
+                        </>
+                    )}
+
+                    <LanguageSwitcher />
                 </div>
             </div>
-        </div>
+        </nav>
     );
 };
 
-export default AdminDashboard;
+export default Navbar;
