@@ -1,13 +1,15 @@
-import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
-import RentalService from '../services/rental.service';
+import {useEffect, useState} from 'react';
+import {Link, useNavigate} from 'react-router-dom';
+import RentalService from '../../services/rental.service.js';
+import {useTranslation} from 'react-i18next';
+import Pagination from "../../components/Pagination.jsx";
 
 const MyRentals = () => {
     const [rentals, setRentals] = useState([]);
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
+    const {t} = useTranslation();
 
-    // Pagination State
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 5;
 
@@ -23,25 +25,24 @@ const MyRentals = () => {
             });
     }, []);
 
-    // Pagination Logic
     const indexOfLastItem = currentPage * itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = rentals.slice(indexOfFirstItem, indexOfLastItem);
     const totalPages = Math.ceil(rentals.length / itemsPerPage);
 
-    if (loading) return <div className="text-center mt-4">Loading history...</div>;
+    if (loading) return <div className="text-center mt-4">{t('common.loading')}</div>;
 
     return (
         <div className="container mt-4">
             <div className="flex-between mb-4">
-                <h2>My Rental History</h2>
-                <span className="text-muted">{rentals.length} bookings</span>
+                <h2>{t('rentals.title')}</h2>
+                <span className="text-muted">{rentals.length} {t('rentals.bookings')}</span>
             </div>
 
             {rentals.length === 0 ? (
-                <div className="card text-center" style={{ padding: '60px' }}>
-                    <h3 className="text-muted">You haven't rented any cars yet.</h3>
-                    <Link to="/" className="btn btn-primary mt-4">Browse Available Cars</Link>
+                <div className="card text-center">
+                    <h3 className="text-muted">{t('rentals.empty')}</h3>
+                    <Link to="/" className="btn btn-primary mt-4">{t('rentals.browse')}</Link>
                 </div>
             ) : (
                 <>
@@ -49,12 +50,11 @@ const MyRentals = () => {
                         <table>
                             <thead>
                             <tr>
-                                <th>Vehicle Info</th>
-                                <th>Rental Period</th>
-                                <th>Total Cost</th>
-                                <th>Status</th>
-                                {/* FIX: Centered Header */}
-                                <th style={{ textAlign: 'center' }}>Manage</th>
+                                <th>{t('rentals.col_vehicle')}</th>
+                                <th>{t('rentals.col_period')}</th>
+                                <th>{t('rentals.col_cost')}</th>
+                                <th>{t('rentals.col_status')}</th>
+                                <th className="text-center">{t('rentals.col_manage')}</th>
                             </tr>
                             </thead>
                             <tbody>
@@ -62,37 +62,37 @@ const MyRentals = () => {
                                 <tr key={rental.idRental}>
                                     <td>
                                         <strong>{rental.car?.brand} {rental.car?.model}</strong>
-                                        <div className="text-muted" style={{ fontSize: '0.85rem', marginTop: '4px' }}>
+                                        <div className="text-muted text-sm mt-1">
                                             {rental.car?.location?.city} • {rental.car?.year}
                                         </div>
                                     </td>
                                     <td>
-                                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                        <div className="flex-align-center gap-2">
                                             <span>{rental.dateFrom}</span>
                                             <span className="text-muted">➔</span>
                                             <span>{rental.dateTo}</span>
                                         </div>
                                     </td>
-                                    <td style={{ color: 'var(--success)', fontWeight: 'bold' }}>
+                                    <td className="text-success font-bold">
                                         ${rental.finalPrice}
                                     </td>
                                     <td>
-                                        {/* FIX: Force Uppercase for CSS matching */}
                                         <span className={`badge ${rental.rentalStatus?.status?.toUpperCase()}`}>
-                                                {rental.rentalStatus?.status}
-                                            </span>
+                                            {rental.rentalStatus?.status}
+                                        </span>
                                     </td>
-                                    {/* FIX: Centered Column */}
-                                    <td style={{ textAlign: 'center' }}>
+                                    <td className="text-center">
                                         {rental.rentalStatus?.status === 'ACTIVE' ? (
                                             <button
                                                 className="btn btn-outline btn-sm"
                                                 onClick={() => navigate(`/rentals/edit/${rental.idRental}`)}
                                             >
-                                                Edit / Cancel
+                                                {t('rentals.btn_edit')}
                                             </button>
                                         ) : (
-                                            <span className="text-muted" style={{ fontSize: '0.85rem' }}>Closed</span>
+                                            <span className="text-muted text-sm">
+                                                {t('rentals.status_closed')}
+                                            </span>
                                         )}
                                     </td>
                                 </tr>
@@ -101,23 +101,12 @@ const MyRentals = () => {
                         </table>
                     </div>
 
-                    {/* Pagination Controls */}
                     {totalPages > 1 && (
-                        <div className="pagination">
-                            <button
-                                onClick={() => setCurrentPage(p => Math.max(p - 1, 1))}
-                                disabled={currentPage === 1}
-                            >
-                                Previous
-                            </button>
-                            <span className="text-muted">Page {currentPage} of {totalPages}</span>
-                            <button
-                                onClick={() => setCurrentPage(p => Math.min(p + 1, totalPages))}
-                                disabled={currentPage === totalPages}
-                            >
-                                Next
-                            </button>
-                        </div>
+                        <Pagination
+                            currentPage={currentPage}
+                            totalPages={totalPages}
+                            onPageChange={setCurrentPage}
+                        />
                     )}
                 </>
             )}

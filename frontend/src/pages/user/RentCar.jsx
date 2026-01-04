@@ -1,35 +1,39 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import CarService from '../services/car.service';
-import RentalService from '../services/rental.service';
+import {useEffect, useState} from 'react';
+import {useNavigate, useParams} from 'react-router-dom';
+import CarService from '../../services/car.service.js';
+import RentalService from '../../services/rental.service.js';
+import {useTranslation} from 'react-i18next';
+import {toast} from 'react-toastify';
 
 const RentCar = () => {
-    const { id } = useParams();
+    const {id} = useParams();
     const navigate = useNavigate();
+    const {t} = useTranslation();
 
     const [car, setCar] = useState(null);
-    const [dates, setDates] = useState({ dateFrom: '', dateTo: '' });
+    const [dates, setDates] = useState({dateFrom: '', dateTo: ''});
     const [totalPrice, setTotalPrice] = useState(0);
     const [loading, setLoading] = useState(false);
-    const [error, setError] = useState('');
 
-    // 1. Fetch Car using Service
     useEffect(() => {
         CarService.getById(id)
             .then(setCar)
-            .catch(() => navigate('/'));
-    }, [id, navigate]);
+            .catch(() => {
+                toast.error(t('rentals.error_booking'));
+                navigate('/');
+            });
+    }, [id, navigate, t]);
 
-    // 2. Calculate Price automatically
     useEffect(() => {
         if (car && dates.dateFrom && dates.dateTo) {
             const start = new Date(dates.dateFrom);
             const end = new Date(dates.dateTo);
-            const diffTime = Math.abs(end - start);
+            const diffTime = end - start;
             const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
 
-            if (diffDays > 0) {
-                setTotalPrice(diffDays * car.price);
+            if (diffDays >= 0) {
+                const daysToCharge = diffDays === 0 ? 1 : diffDays;
+                setTotalPrice(daysToCharge * car.price);
             } else {
                 setTotalPrice(0);
             }
@@ -39,101 +43,90 @@ const RentCar = () => {
     const handleRent = async (e) => {
         e.preventDefault();
         setLoading(true);
-        setError('');
 
         if (new Date(dates.dateFrom) > new Date(dates.dateTo)) {
-            setError("End date cannot be before start date.");
+            toast.error(t('rentals.error_date_invalid'));
             setLoading(false);
             return;
         }
 
         try {
-            // Use RentalService
             await RentalService.rentCar({
                 idCar: id,
                 dateFrom: dates.dateFrom,
                 dateTo: dates.dateTo
             });
-            alert('Booking confirmed!');
+            toast.success(t('rentals.success_booking'));
             navigate('/my-rentals');
         } catch (err) {
-            setError(err.response?.data?.message || 'Failed to book. Car might be unavailable.');
+            toast.error(err.response?.data?.message || t('rentals.error_booking'));
         } finally {
             setLoading(false);
         }
     };
 
-    if (!car) return <div className="text-center mt-4">Loading details...</div>;
+    if (!car) return <div className="text-center mt-4">{t('common.loading')}</div>;
 
     return (
-        <div className="container flex-center" style={{ minHeight: '80vh' }}>
-            <div className="card grid grid-2" style={{ maxWidth: '900px', width: '100%', padding: '0', overflow: 'hidden' }}>
+        <div className="container flex-center min-h-80vh">
+            <div className="card w-100 mw-600px">
 
-                {/* LEFT: Car Details Panel */}
-                <div style={{ background: 'var(--bg-body)', padding: '40px', display: 'flex', flexDirection: 'column', justifyContent: 'center' }}>
-                    <div className="badge AVAILABLE" style={{ alignSelf: 'flex-start', marginBottom: '10px' }}>
-                        Available Now
-                    </div>
-                    <h1 style={{ fontSize: '2.5rem', marginBottom: '0', lineHeight: '1.1' }}>{car.brand}</h1>
-                    <h2 style={{ color: 'var(--primary)', marginBottom: '20px' }}>{car.model}</h2>
-
-                    <div className="text-muted" style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <span>📍 Location: {car.location?.city}</span>
-                        <span>📅 Year: {car.year}</span>
-                        <span>⛽ Status: Excellent Condition</span>
-                    </div>
-
-                    <div style={{ marginTop: '30px', borderTop: '1px solid var(--border-color)', paddingTop: '20px' }}>
-                        <span style={{ fontSize: '2rem', fontWeight: 'bold' }}>${car.price}</span>
-                        <span className="text-muted"> / day</span>
+                <div className="p-4">
+                    <div className="flex-between mb-4">
+                        <div>
+                            <span className="badge AVAILABLE mb-2">{t('rentals.available_now')}</span>
+                            <h1 className="text-2xl mb-0">{car.brand} {car.model}</h1>
+                            <div className="text-muted mt-1">
+                                📍 {car.location?.city} • 📅 {car.year}
+                            </div>
+                        </div>
+                        <div className="text-right">
+                            <div className="text-2xl font-bold text-primary">${car.price}</div>
+                            <div className="text-muted text-sm">{t('rentals.per_day')}</div>
+                        </div>
                     </div>
                 </div>
 
-                {/* RIGHT: Booking Form */}
-                <div style={{ padding: '40px' }}>
-                    <h3 className="mb-4">Select Dates</h3>
+                <div className="border-top"></div>
 
-                    {error && (
-                        <div style={{ background: 'rgba(239, 68, 68, 0.1)', color: '#fca5a5', padding: '10px', borderRadius: 'var(--radius)', marginBottom: '15px', fontSize: '0.9rem' }}>
-                            {error}
-                        </div>
-                    )}
+                <div className="p-4 pt-3">
+                    <h3 className="mb-4">{t('rentals.select_dates')}</h3>
 
                     <form onSubmit={handleRent}>
-                        <div className="form-group">
-                            <label>Pick-up Date</label>
-                            <input
-                                type="date"
-                                min={new Date().toISOString().split("T")[0]}
-                                onChange={e => setDates({...dates, dateFrom: e.target.value})}
-                                required
-                            />
-                        </div>
-                        <div className="form-group">
-                            <label>Return Date</label>
-                            <input
-                                type="date"
-                                min={dates.dateFrom}
-                                onChange={e => setDates({...dates, dateTo: e.target.value})}
-                                required
-                            />
+                        <div className="grid grid-2 mb-4">
+                            <div className="form-group mb-0">
+                                <label>{t('rentals.pickup_date')}</label>
+                                <input
+                                    type="date"
+                                    min={new Date().toISOString().split("T")[0]}
+                                    onChange={e => setDates({...dates, dateFrom: e.target.value})}
+                                    required
+                                />
+                            </div>
+                            <div className="form-group mb-0">
+                                <label>{t('rentals.return_date')}</label>
+                                <input
+                                    type="date"
+                                    min={dates.dateFrom}
+                                    onChange={e => setDates({...dates, dateTo: e.target.value})}
+                                    required
+                                />
+                            </div>
                         </div>
 
-                        {/* Price Summary Box */}
-                        <div style={{ padding: '20px', background: 'var(--bg-body)', borderRadius: 'var(--radius)', margin: '25px 0', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            <span className="text-muted">Total Estimate</span>
-                            <span style={{ color: 'var(--success)', fontWeight: 'bold', fontSize: '1.2rem' }}>
+                        <div className="flex-between mb-4 p-4 price-card">
+                            <span className="text-muted">{t('rentals.total_estimate')}</span>
+                            <span className="text-xl font-bold text-success">
                                 ${totalPrice.toFixed(2)}
                             </span>
                         </div>
 
                         <button
                             type="submit"
-                            className="btn btn-primary"
-                            style={{ width: '100%', padding: '12px' }}
+                            className="btn btn-primary w-100"
                             disabled={loading || totalPrice <= 0}
                         >
-                            {loading ? 'Processing...' : 'Confirm Booking'}
+                            {loading ? t('rentals.processing') : t('rentals.btn_book')}
                         </button>
                     </form>
                 </div>
