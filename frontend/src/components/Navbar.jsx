@@ -1,37 +1,60 @@
 import { Link } from 'react-router-dom';
 import useAuth from '../hooks/useAuth';
+import { useTranslation } from 'react-i18next';
+import LanguageSwitcher from './LanguageSwitcher';
 
 const Navbar = () => {
     const { user, logout } = useAuth();
+    const { t } = useTranslation();
 
     return (
-        <nav className="navbar navbar-expand-lg navbar-dark bg-dark px-4 mb-4">
-            <Link className="navbar-brand" to="/">🚗 CarRental</Link>
-            <div className="collapse navbar-collapse">
-                <ul className="navbar-nav me-auto">
-                    <li className="nav-item"><Link className="nav-link" to="/">Home</Link></li>
+        <nav className="border-bottom bg-card py-3 mb-4">
+            <div className="container flex-between">
+
+                <div className="flex-align-center gap-3">
+                    <Link to="/" className="text-xl font-extrabold text-primary">
+                        ⚡CarRental
+                    </Link>
+                </div>
+
+                <div className="flex gap-4">
+                    <Link to="/" className="text-main font-medium">
+                        {t('navbar.home')}
+                    </Link>
 
                     {user && (
-                        <li className="nav-item"><Link className="nav-link" to="/my-rentals">My Rentals</Link></li>
+                        <Link to="/my-rentals" className="text-main font-medium">
+                            {t('navbar.myRentals')}
+                        </Link>
                     )}
 
-                    {user && user.role === 'ROLE_ADMIN' && (
-                        <li className="nav-item"><Link className="nav-link text-warning" to="/admin">Admin Dashboard</Link></li>
+                    {user?.role === 'ROLE_ADMIN' && (
+                        <Link to="/admin" className="text-primary font-semibold">
+                            {t('navbar.dashboard')}
+                        </Link>
                     )}
-                </ul>
+                </div>
 
-                <div className="d-flex gap-2">
+                <div className="flex-center gap-2">
                     {user ? (
                         <>
-                            <span className="navbar-text text-white me-3">Hi, {user.email}</span>
-                            <button onClick={logout} className="btn btn-outline-danger btn-sm">Logout</button>
+                            <span className="text-muted mr-2">{user.email}</span>
+                            <button onClick={logout} className="btn btn-outline btn-sm">
+                                {t('navbar.logout')}
+                            </button>
                         </>
                     ) : (
                         <>
-                            <Link to="/login" className="btn btn-outline-light btn-sm">Login</Link>
-                            <Link to="/register" className="btn btn-primary btn-sm">Register</Link>
+                            <Link to="/login" className="btn btn-outline btn-sm">
+                                {t('navbar.login')}
+                            </Link>
+                            <Link to="/register" className="btn btn-primary btn-sm">
+                                {t('navbar.register')}
+                            </Link>
                         </>
                     )}
+
+                    <LanguageSwitcher />
                 </div>
             </div>
         </nav>
