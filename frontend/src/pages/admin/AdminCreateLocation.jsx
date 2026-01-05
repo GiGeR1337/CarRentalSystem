@@ -49,7 +49,7 @@ const AdminCreateLocation = () => {
                     </div>
 
                     <div className="flex gap-2 mt-4">
-                        <button type="submit" className="btn btn-success flex-1">
+                        <button type="submit" className="btn btn-primary flex-1">
                             {t('admin.create_location.btn_create')}
                         </button>
                         <button type="button" onClick={() => navigate('/admin/locations')} className="btn btn-outline">

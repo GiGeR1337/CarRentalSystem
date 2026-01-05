@@ -4,6 +4,7 @@ import CarService from '../../services/car.service';
 import LocationService from '../../services/location.service'; // 1. Import LocationService
 import { useTranslation } from 'react-i18next';
 import { toast } from 'react-toastify';
+import CarStatusService from "../../services/carStatus.service.js";
 
 const AdminEditCar = () => {
     const { id } = useParams();
@@ -15,17 +16,16 @@ const AdminEditCar = () => {
     });
 
     const [locations, setLocations] = useState([]);
-
-    const statuses = [
-        { id: 1, name: 'AVAILABLE' },
-        { id: 2, name: 'RENTED' },
-        { id: 3, name: 'UNAVAILABLE' }
-    ];
+    const [statuses, setStatuses] = useState([]);
 
     useEffect(() => {
         LocationService.getAll()
             .then(setLocations)
-            .catch(err => console.error("Failed to load locations", err));
+            .catch(err => console.error("Error loading locations", err));
+
+        CarStatusService.getAll()
+            .then(setStatuses)
+            .catch(err => console.error("Error loading statuses", err));
 
         CarService.getById(id)
             .then(car => {
@@ -34,8 +34,8 @@ const AdminEditCar = () => {
                     model: car.model,
                     price: car.price,
                     year: car.year,
-                    idStatus: car.carStatus.idStatus,
-                    idLocation: car.location.idLocation
+                    idStatus: car.carStatus?.idStatus || '',
+                    idLocation: car.location?.idLocation || ''
                 });
             })
             .catch(() => toast.error(t('admin.edit_car.error_load')));
@@ -45,7 +45,7 @@ const AdminEditCar = () => {
         e.preventDefault();
         try {
             await CarService.update(id, formData);
-            toast.success("Car updated successfully!");
+            toast.success("admin.edit_car.success_update");
             navigate('/admin/cars');
         } catch (err) {
             toast.error(t('admin.edit_car.error_update'));
@@ -119,8 +119,8 @@ const AdminEditCar = () => {
                         >
                             <option value="" disabled>Select Status</option>
                             {statuses.map(status => (
-                                <option key={status.id} value={status.id}>
-                                    {status.name}
+                                <option key={status.idStatus} value={status.idStatus}>
+                                    {status.status}
                                 </option>
                             ))}
                         </select>

@@ -128,8 +128,8 @@
       "model": "Model",
       "price": "Cena / Dzień",
       "year": "Rok",
-      "location": "ID Lokalizacji",
-      "status": "ID Statusu",
+      "location": "Lokalizacji",
+      "status": "Statusu",
       "btn_create": "Utwórz",
       "success": "Pojazd utworzony pomyślnie!",
       "error": "Nie udało się utworzyć pojazdu."

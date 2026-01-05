@@ -9,19 +9,17 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
     const navigate = useNavigate();
 
-    // Load user from localStorage on refresh
     useEffect(() => {
         const token = localStorage.getItem("token");
         if (token) {
             try {
                 const decoded = jwtDecode(token);
-                // Check expiry
                 if (decoded.exp * 1000 < Date.now()) {
                     logout();
                 } else {
                     setUser({
                         email: decoded.sub,
-                        role: decoded.role // Ensure your Backend JwtUtil sends this!
+                        role: decoded.role
                     });
                 }
             } catch (error) {
