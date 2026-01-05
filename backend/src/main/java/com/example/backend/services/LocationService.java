@@ -3,7 +3,6 @@ package com.example.backend.services;
 import com.example.backend.dtos.LocationDTO;
 import com.example.backend.models.Location;
 import com.example.backend.repositories.LocationRepository;
-import jakarta.annotation.PostConstruct;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -38,18 +37,6 @@ public class LocationService {
 
     public void deleteLocation(Integer id) {
         locationRepository.deleteById(id);
-    }
-
-    @PostConstruct
-    public void initLocations() {
-        if (locationRepository.count() == 0) {
-            saveLocation("Warsaw", "Mortgage Street");
-            saveLocation("Warsaw", "Royal Street");
-            saveLocation("Warsaw", "New World Street");
-            saveLocation("Krakow", "Kanonicza Street");
-            saveLocation("Krakow", "Florianska Street");
-            saveLocation("Krakow", "Grodzka Street");
-        }
     }
 
     private void saveLocation(String city, String address) {
