@@ -18,7 +18,6 @@ public class CarStatusController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasRole('ADMIN')")
     public List<CarStatus> getAllCarStatuses() {
         return carStatusService.getAllCarStatuses();
     }
